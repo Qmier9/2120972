@@ -1,0 +1,33 @@
+syms a b;
+c = [a b]';
+A=[-20,-300,-60,-100,-70,-220,-50,-180,-170,500,150,-40,-50,-90,-200,380,-120,-250,-220,200];
+m=10
+n = length(A);
+B = cumsum(A);
+for i = 2:n
+    C(i) = (B(i) + B(i - 1))/2; 
+end
+C(1) = [];
+B = [-C;ones(1,n-1)];
+Y = A; Y(1) = []; Y = Y';
+c = inv(B*B')*B*Y;
+c = c';
+a = c(1); b = c(2);
+F = []; F(1) = A(1);
+for i = 2:(n+m)
+    F(i) = (A(1)-b/a)/exp(a*(i-1))+ b/a;
+end
+G = []; G(1) = A(1);
+for i = 2:(n+m)
+    G(i) = F(i) - F(i-1); 
+end
+disp('predicted data：');
+G
+t1 = 1:30;
+t2 = 1:(30+m);
+plot(t1, A,'bo--'); hold on;
+plot(t2, G, 'r*-');
+xlabel('k:year-1990'); ylabel('tempreture abnormaly/°C');
+legend('Measured tempreture abnormaly','predicted tempreture abnormaly');
+title('prediction graph');
+grid on;
