@@ -1,0 +1,115 @@
+% 颜色控制
+Map = [1 1 1; 0 0 0];
+colormap(Map);
+% 设置网格大小
+S = 100;
+L = zeros(S);
+step=[0,0];
+% 把中间一个数设置为 1 作为元胞种子
+clc;
+
+for t=1:5:S
+    for i=1:5:S
+        L(t,i)=1;
+    end
+end
+
+Temp = L;
+imagesc(L);
+
+
+for t=1:1000
+    for i=1:S
+        for j=1:S
+            if L(i,j)==1
+                step=[0,0];
+                for m=i-25:i+25
+                    for n=j-25:j+25
+                        if m==i&&n==j
+                            continue
+                        end
+                        if m>=1&&m<=S&&n>=1&&n<=S
+                        if L(m,n)==1
+                            
+                            
+                            s=(m-i)^2+(n-j)^2;
+                            if s<=144
+                                tab=-25/4*sqrt(s)+100;
+                            elseif s<256
+                                tab=20;
+                            elseif s<400
+                                tab=0;
+                            elseif s>=400
+                                tab=20/(sqrt(s)-19);
+                            end
+                            tab=round(tab/20);
+                            if tab==0
+                                continue
+                            end
+                            if n-i==0
+                                dir=999;
+                            else
+                                dir=(m-i)/(n-j);
+                            end
+                            if dir>-2.414&&dir<=-0.414&&(j-n)>=0
+                                %disp('1')
+                                step(1)=step(1)-tab;  %行
+                                step(2)=step(2)+tab;  %列
+                            end
+                            if (dir>2.414||dir<=-2.414)&&(i-m)<=0
+                                %disp('2')
+                                step(1)=step(1)-tab;
+                            end
+                            if dir>0.414&&dir<=2.414&&(j-n)<=0
+                                %disp('3')
+                                step(1)=step(1)-tab;
+                                step(2)=step(2)-tab;
+                            end
+                            if dir>-0.414&&dir<=0.414&&(j-n)<=0
+                                %disp('4')
+                                step(2)=step(2)-tab;
+                            end
+                            if dir>-2.414&&dir<=-0.414&&(j-n)<=0
+                                %disp('5')
+                                step(1)=step(1)+tab;
+                                step(2)=step(2)-tab;
+                            end
+                            if (dir>2.414||dir<=-2.414)&&(i-m)>=0
+                                %disp('6')
+                                step(1)=step(1)+tab;
+                            end
+                            if dir>0.414&&dir<=2.414&&(j-n)>=0
+                                %disp('7')
+                                step(1)=step(1)+tab;
+                                step(2)=step(2)+tab;
+                            end
+                            if dir>-0.414&&dir<=0.414&&(j-n)>=0
+                                %disp('8')
+                                step(2)=step(2)+tab;
+                            end
+                        end
+                        end
+                    end
+                end
+                if step(1)==0&&step(2)==0
+                    continue
+                end
+                if i+step(1)>=1&&i+step(1)<=S&&j+step(2)>=1&&j+step(2)<=S
+                    %disp('1')
+                    Temp(i+step(1),j+step(2))=1;
+                    Temp(i,j)=0;
+                else
+                    %disp('3')
+                    Temp(i,j)=0;
+                
+                end
+                
+            end
+        end
+    end
+    L=Temp;
+    imagesc(L);
+    % 速度控制
+    pause(0.02);
+    
+end
