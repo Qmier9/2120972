@@ -1,0 +1,15 @@
+k=0;
+h=0;
+c=[[[]]]
+for i=1:4932
+    for j=1:5915
+        if a(i,j,3)<=250
+            k=im2double(a(i,j,1))*255-1.85*im2double(a(i,j,2))*255-0.5*im2double(a(i,j,3))*255;
+            h=fix((k+594.9)*2.5915891)
+            c(i,j,1)=h;
+        else
+            c(i,j,1)=0;
+        end
+    end
+end
+
